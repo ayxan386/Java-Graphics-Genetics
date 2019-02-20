@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class rocket {
 
-        public static double maxv = 5;
+        public static double maxv = 6;
         public static double w = 20,h = 40;
         public static double mutationRate = 0.09;
         public static Random r = new Random();
@@ -14,6 +14,7 @@ public class rocket {
         mvector[] vel;
         double fitness;
         Color c;
+        boolean stop = false;
         public rocket()
         {
             fitness = 0;
@@ -22,21 +23,22 @@ public class rocket {
             vel = new mvector[400];
             for(int i=0;i<vel.length;i++) {
                 vel[i] = mvector.randomVector();
-                vel[i].mult(r.nextDouble() * maxv);
+                vel[i].mult(r.nextDouble() * (maxv-maxv/4) + maxv/4);
             }
         }
         public void update()
         {
-            if(pos.x - w < 0 || pos.x + w > Main.width
+            if(stop || pos.x - w < 0 || pos.x + w > Main.width
             || pos.y - w < 0 || pos.y + w > Main.height)
             {
+                fitness = 0;
                 c = Color.BLUE;
                 draw();
                 return;
             }
             if(mvector.dist(pos,Main.target) < (w + 40) * (w + 40))
             {
-                fitness = 1.5;
+                fitness = 10;
                 c = Color.green;
                 draw();
                 return;
@@ -66,14 +68,13 @@ public class rocket {
         }
         public void mutate()
         {
-            for(int i=0;i<vel.length;i++)
-            {
                 if(r.nextDouble() < mutationRate) {
+                    int i = r.nextInt(vel.length);
+                    //System.out.println("Mutated the " + i + " gene of rocket");
                     vel[i] = mvector.randomVector();
                     vel[i].mult((r.nextDouble()*maxv));
                     return;
                 }
-            }
         }
         public void calcFitness()
         {

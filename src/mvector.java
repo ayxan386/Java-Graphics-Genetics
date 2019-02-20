@@ -23,7 +23,14 @@ public class mvector {
         res.y = Math.sin(res.angle);
         return  res;
     }
-
+    public static mvector vectorFromAngle(double angle)
+    {
+        mvector res = new mvector();
+        res.angle = angle;
+        res.x = Math.cos(res.angle);
+        res.y = Math.sin(res.angle);
+        return  res;
+    }
     public void mult(double l)
     {
         this.x = l * Math.cos(this.angle);

@@ -13,3 +13,13 @@ public class myShape {
         fill = f;
     }
 }
+class textGraph
+{
+    String s;
+    int x,y;
+    public textGraph(String s, int x, int y) {
+        this.s = s;
+        this.x = x;
+        this.y = y;
+    }
+}

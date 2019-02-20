@@ -2,7 +2,9 @@ import java.util.Random;
 
 public class Population {
     rocket[] rockets;
-    static int generation = -1;
+    private static int generation = -1;
+    public static double avg = 0;
+    private static rocket best = null;
     public Population(int size,boolean flag)
     {
         generation ++;
@@ -19,6 +21,9 @@ public class Population {
     {
         for(rocket r : rockets)
            if(r != null) r.update();
+           myPanel.addText(String.format("Current Generation: %d",generation),5,15);
+           myPanel.addText(String.format("Current Best fitness: %.3f",best != null ? best.fitness : 0),5,35);
+           myPanel.addText(String.format("Current Generation: %.3f",avg),5,55);
     }
     public rocket random()
     {
@@ -43,19 +48,13 @@ public class Population {
         {
             r.normScore = r.fitness / sum;
         }
+       this.avg = sum / rockets.length;
     }
     public Population nextGen()
     {
-        rocket best = rockets[0];
-        for(rocket r : rockets) {
-            if(r.fitness > best.fitness)
-                best = r;
-        }
-        System.out.println("Current generation :" + generation);
-        System.out.printf("Current best fitness :%.3f\n",best.fitness);
-//        System.out.println("last id :" + best.lasti);
-        Population temp = new Population(rockets.length,false);
+        this.best = this.getBest();
         normalize();
+        Population temp = new Population(rockets.length,false);
         for(int i=0;i<temp.rockets.length;i++)
         {
             rocket a = random();
@@ -64,5 +63,14 @@ public class Population {
             temp.rockets[i].mutate();
         }
         return temp;
+    }
+    public rocket getBest()
+    {
+        rocket b = rockets[0];
+        for(rocket r : rockets) {
+            if(r.fitness > b.fitness)
+                b = r;
+        }
+        return b;
     }
 }

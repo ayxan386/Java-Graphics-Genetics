@@ -7,30 +7,43 @@ import java.util.ArrayList;
 
 public class myPanel extends JPanel {
     static ArrayList<myShape> shapes;
+    static ArrayList<textGraph> texts;
         public myPanel()
         {
             shapes = new ArrayList<>();
+            texts = new ArrayList<>();
         }
         public void paintComponent(Graphics g)
         {
             Graphics2D g2 = (Graphics2D) g;
             g2.setColor(Color.white);
             g2.fillRect(0,0,Main.width,Main.height);
-            for(myShape sp : shapes)
+            for(int i = 0;i<shapes.size();i++)
             {
-                g2.setColor(sp.color);
-                if(sp.fill)
-                {
-                    g2.fill(sp.shape);
+                myShape sp = shapes.get(i);
+                try {
+                    g2.setColor(sp.color);
+                    if (sp.fill) {
+                        g2.fill(sp.shape);
+                    } else {
+                        g2.draw(sp.shape);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    g2.draw(sp.shape);
+                    System.out.print("");
                 }
             }
+            for(int i=0;i<texts.size();i++) {
+                textGraph t = texts.get(i);
+                g2.setFont(new Font("Arial",Font.BOLD,20));
+                g2.setColor(Color.black);
+                g2.drawString(t.s,t.x,t.y);
+            }
+            texts.clear();
             shapes.clear();
         }
-    public static void drawRect(double x,double y,double h,double w,Color c,boolean fill)
+    public static void drawRect(double x,double y,double w,double h,Color c,boolean fill)
     {
         Shape s = new Rectangle2D.Double(x,y,w,h);
         myShape temp = new myShape(s,c,fill);
@@ -54,5 +67,9 @@ public class myPanel extends JPanel {
         Shape s = new Line2D.Double(x0,y0,x,y);
         myShape temp = new myShape(s,c,false);
         shapes.add(temp);
+    }
+    public static void addText(String s,int x,int y)
+    {
+        texts.add(new textGraph(s,x,y));
     }
 }
